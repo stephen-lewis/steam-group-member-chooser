@@ -1,2 +1,7 @@
-RewriteEngine On
-RewriteRule ^$ /public [L]
+# .htaccess main domain to subdirectory redirect
+# Do not change this line.
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^yalanaria.co.uk$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^www.yalanaria.co.uk$
+RewriteCond %{REQUEST_URI} !/public
+RewriteRule (.*) /public/$1 [L]

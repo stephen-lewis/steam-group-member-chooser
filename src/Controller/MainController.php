@@ -18,16 +18,15 @@ class MainController extends AbstractController
     /**
      * @param string  $steamApiKey
      * @param Request $request
-     * @param string  $group
-     * @Route("/{group}")
-     * @Route("/steam-group-member-chooser/{group}", name="steam-group-chooser")
+     * @Route("/", name="steam-group-chooser")
+     * @Route("/public/")
      *
      * @return Response
      * @throws Exception
      */
-    public function steamGroupMemberChooser(string $steamApiKey, Request $request, string $group = '') : Response
+    public function steamGroupMemberChooser(string $steamApiKey, Request $request) : Response
     {
-        $form = $this->createForm(SteamGroupChooserFormType::class, ['groupName' => $group]);
+        $form = $this->createForm(SteamGroupChooserFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -57,6 +56,7 @@ class MainController extends AbstractController
                     'memberCount' => $memberCount,
                     'groupName' => $groupName,
                     'groupHeadline' => $groupHeadline,
+                    'form' => $form->createView(),
                 ]
             );
         }
