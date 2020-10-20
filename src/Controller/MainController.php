@@ -33,7 +33,17 @@ class MainController extends AbstractController
             $groupName = trim($form->getData()['groupName']);
 
             $url = "http://steamcommunity.com/groups/" . $groupName . "/memberslistxml/?xml=1";
-            $xml = simplexml_load_string(file_get_contents($url));
+            try {
+                $xml = simplexml_load_string(file_get_contents($url));
+            } catch (Exception $e) {
+                return $this->render(
+                    'steam_group_member_chooser.html.twig',
+                    [
+                        'form' => $form->createView(),
+                        'error' => 'Group "' . $groupName . '" not found on Steam',
+                    ]
+                );
+            }
 
             $members = array();
             $memberCount = $xml->memberCount;
