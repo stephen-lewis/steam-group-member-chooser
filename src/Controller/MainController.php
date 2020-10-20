@@ -43,6 +43,7 @@ class MainController extends AbstractController
             }
 
             $winner = $members[random_int(0, $memberCount - 1)];
+            $groupHeadline = $xml->groupDetails->headline;
 
             $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" . $steamApiKey . "&steamids=" . $winner . "&format=xml";
             $xml = simplexml_load_string(file_get_contents($url));
@@ -55,6 +56,7 @@ class MainController extends AbstractController
                     'winnerAvatar' => $xml->players->player->avatarfull,
                     'memberCount' => $memberCount,
                     'groupName' => $groupName,
+                    'groupHeadline' => $groupHeadline,
                 ]
             );
         }

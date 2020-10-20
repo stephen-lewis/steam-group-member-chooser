@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Steam Group Member Chooser{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="card mt-5">
@@ -10,11 +12,12 @@
                 <div class="card-body">
                     {{ form_start(form) }}
                     {{ form_row(form.groupName) }}
-                    <button type="submit" class="btn btn-block btn-outline-success mt-4">Submit</button>
+                    <button type="submit" class="btn btn-block btn-outline-success mt-4">Pick a member</button>
                     {{ form_end(form) }}
                 </div>
             {% else %}
                 <div class="card-body">
+                    <h4 class="mb-4">{{ groupHeadline }}</h4>
                     The winner is: <strong><img src="{{ winnerAvatar }}" width="50" height="50" class="ml-3 mr-2" /> {{ winner }}</strong>.<br /><br />
                     <a href="{{ path('steam-group-chooser', {'group': groupName}) }}" class="btn btn-block btn-outline-dark">Pick another from {{ groupName }}</a>
                 </div>
