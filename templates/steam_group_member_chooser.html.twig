@@ -5,39 +5,57 @@
 {% block body %}
     <div class="container">
         <div class="card mt-5">
+            {% if winner is not defined %}
             <div class="card-header">
                 <h5 class="card-title mb-0">Steam Group Member Chooser</h5>
             </div>
-            {% if winner is not defined %}
-                <div class="card-body">
-                    {{ form_start(form) }}
-                    {{ form_row(form.groupName) }}
-                    <button type="submit" class="btn btn-block btn-outline-success mt-4">Pick a member</button>
-                    {{ form_end(form) }}
-                </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_label(form.groupName) }}
+                <small>(this is the bit in the URL https://steamcommunity.com/groups/<strong>???</strong>)</small>
+                {{ form_widget(form.groupName) }}
+                <button type="submit" class="btn btn-block btn-outline-success mt-4">Pick a member</button>
+                {{ form_end(form) }}
+            </div>
             {% if error is defined %}
                 <div class="card-footer">
                     {{ error }}
                 </div>
             {% endif %}
             {% else %}
-                <div class="card-body">
-                    <h4 class="mb-4">{{ groupHeadline }}</h4>
-                    The winner is: <strong><img src="{{ winnerAvatar }}" width="50" height="50" class="ml-3 mr-2" /> {{ winner }}</strong>.<br /><br />
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-auto"><img src="{{ groupAvatar }}" /></div>
+                    <div class="col"><h4>{{ groupTitle }} &nbsp;&nbsp;&nbsp;<span class="text-secondary font-weight-light">{{ groupHeadline }}</span></h4>
+                        <p>{{ groupSummary }}</p></div>
                 </div>
-                <div class="card-footer">
-                    There were {{ memberCount }} group members to choose from.
+            </div>
+            <div class="card-body">
+                <div class="card w-auto">
+                    <div class="card-body">
+                        The winner is: <strong><img src="{{ winnerAvatar }}" width="50" height="50"
+                                                    class="ml-3 mr-2" /> {{ winner }}</strong>
+                    </div>
                 </div>
-        </div><div class="card mt-5">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Steam Group Member Chooser</h5>
-                </div>
-                <div class="card-body">
-                    {{ form_start(form) }}
-                    {{ form_row(form.groupName) }}
-                    <button type="submit" class="btn btn-block btn-outline-success mt-4">Pick another</button>
-                    {{ form_end(form) }}
-                </div>
+
+            </div>
+            <div class="card-footer">
+                There were {{ memberCount }} group members to choose from ({{ unlimitedMemberCount }} unlimited
+                members, {{ onlineMemberCount }} online).
+            </div>
+        </div>
+        <div class="card mt-5">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Steam Group Member Chooser</h5>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_label(form.groupName) }}
+                <small>(this is the bit in the URL https://steamcommunity.com/groups/<strong>???</strong>)</small>
+                {{ form_widget(form.groupName) }}
+                <button type="submit" class="btn btn-block btn-outline-success mt-4">Pick another</button>
+                {{ form_end(form) }}
+            </div>
             {% endif %}
         </div>
     </div>

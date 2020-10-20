@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\SteamGroupChooserFormType;
+use App\Form\SteamGroupChooserFormType;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,6 +45,12 @@ class MainController extends AbstractController
                 );
             }
 
+            $groupAvatar = $xml->groupDetails->avatarMedium;
+            $groupSummary = \strip_tags((string)$xml->groupDetails->summary);
+            $groupTitle = $xml->groupDetails->groupName;
+            $unlimitedMemberCount = $xml->groupDetails->memberCount;
+            $onlineMemberCount = $xml->groupDetails->membersOnline;
+
             $members = array();
             $memberCount = $xml->memberCount;
             for ($i = 0; $i < $memberCount; $i++) {
@@ -65,7 +71,12 @@ class MainController extends AbstractController
                     'winnerAvatar' => $xml->players->player->avatarfull,
                     'memberCount' => $memberCount,
                     'groupName' => $groupName,
+                    'groupSummary' => $groupSummary,
                     'groupHeadline' => $groupHeadline,
+                    'groupAvatar' => $groupAvatar,
+                    'groupTitle' => $groupTitle,
+                    'unlimitedMemberCount' => $unlimitedMemberCount,
+                    'onlineMemberCount' => $onlineMemberCount,
                     'form' => $form->createView(),
                 ]
             );
