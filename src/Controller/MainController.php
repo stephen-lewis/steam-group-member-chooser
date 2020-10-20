@@ -18,15 +18,16 @@ class MainController extends AbstractController
     /**
      * @param string  $steamApiKey
      * @param Request $request
-     * @Route("/")
-     * @Route("/steam-group-member-chooser", name="steam-group-chooser")
+     * @param string  $group
+     * @Route("/{group}")
+     * @Route("/steam-group-member-chooser/{group}", name="steam-group-chooser")
      *
      * @return Response
      * @throws Exception
      */
-    public function steamGroupMemberChooser(string $steamApiKey, Request $request) : Response
+    public function steamGroupMemberChooser(string $steamApiKey, Request $request, string $group = '') : Response
     {
-        $form = $this->createForm(SteamGroupChooserFormType::class);
+        $form = $this->createForm(SteamGroupChooserFormType::class, ['groupName' => $group]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -36,11 +37,12 @@ class MainController extends AbstractController
             $xml = simplexml_load_string(file_get_contents($url));
 
             $members = array();
-            for ($i = 0; $i < $xml->memberCount; $i++) {
+            $memberCount = $xml->memberCount;
+            for ($i = 0; $i < $memberCount; $i++) {
                 $members[] = $xml->members->steamID64[$i];
             }
 
-            $winner = $members[random_int(0, $xml->memberCount - 1)];
+            $winner = $members[random_int(0, $memberCount - 1)];
 
             $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" . $steamApiKey . "&steamids=" . $winner . "&format=xml";
             $xml = simplexml_load_string(file_get_contents($url));
@@ -50,7 +52,9 @@ class MainController extends AbstractController
                 [
                     'members' => $members,
                     'winner' => $xml->players->player->personaname,
-                    'winnerAvatar' => $xml->players->player->avatarfull
+                    'winnerAvatar' => $xml->players->player->avatarfull,
+                    'memberCount' => $memberCount,
+                    'groupName' => $groupName,
                 ]
             );
         }

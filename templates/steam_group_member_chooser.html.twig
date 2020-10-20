@@ -1,10 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if form is defined %}
-    {{ form_start(form) }}
-    {{ form_end(form) }}
-    {% else %}
-    The winner is {{ winner }}.
-    {% endif %}
+    <div class="container">
+        <div class="card mt-5">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Steam Group Member Chooser</h5>
+            </div>
+            {% if form is defined %}
+                <div class="card-body">
+                    {{ form_start(form) }}
+                    {{ form_row(form.groupName) }}
+                    <button type="submit" class="btn btn-block btn-outline-success mt-4">Submit</button>
+                    {{ form_end(form) }}
+                </div>
+            {% else %}
+                <div class="card-body">
+                    The winner is: <strong><img src="{{ winnerAvatar }}" width="50" height="50" class="ml-3 mr-2" /> {{ winner }}</strong>.<br /><br />
+                    <a href="{{ path('steam-group-chooser', {'group': groupName}) }}" class="btn btn-block btn-outline-dark">Pick another from {{ groupName }}</a>
+                </div>
+                <div class="card-footer">
+                    There were {{ memberCount }} group members to choose from.
+                </div>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
