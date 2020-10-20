@@ -18,6 +18,7 @@ class MainController extends AbstractController
     /**
      * @param string  $steamApiKey
      * @param Request $request
+     * @Route("/")
      * @Route("/steam-group-member-chooser", name="steam-group-chooser")
      *
      * @return Response
