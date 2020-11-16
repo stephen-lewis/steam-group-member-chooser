@@ -34,7 +34,7 @@ class MainController extends AbstractController
 
             $url = "http://steamcommunity.com/groups/" . $groupName . "/memberslistxml/?xml=1";
             try {
-                $xml = simplexml_load_string(file_get_contents($url));
+                $groupXml = simplexml_load_string(file_get_contents($url));
             } catch (Exception $e) {
                 return $this->render(
                     'steam_group_member_chooser.html.twig',
@@ -45,30 +45,47 @@ class MainController extends AbstractController
                 );
             }
 
-            $groupAvatar = $xml->groupDetails->avatarMedium;
-            $groupSummary = \strip_tags((string)$xml->groupDetails->summary);
-            $groupTitle = $xml->groupDetails->groupName;
-            $unlimitedMemberCount = $xml->groupDetails->memberCount;
-            $onlineMemberCount = $xml->groupDetails->membersOnline;
+            $groupAvatar = $groupXml->groupDetails->avatarMedium;
+            $groupSummary = \strip_tags((string)$groupXml->groupDetails->summary);
+            $groupTitle = $groupXml->groupDetails->groupName;
+            $groupHeadline = $groupXml->groupDetails->headline;
+            $unlimitedMemberCount = $groupXml->groupDetails->memberCount;
+            $onlineMemberCount = $groupXml->groupDetails->membersOnline;
 
             $members = array();
-            $memberCount = $xml->memberCount;
+            $memberCount = $groupXml->memberCount;
             for ($i = 0; $i < $memberCount; $i++) {
-                $members[] = $xml->members->steamID64[$i];
+                $members[] = $groupXml->members->steamID64[$i];
             }
 
-            $winner = $members[random_int(0, $memberCount - 1)];
-            $groupHeadline = $xml->groupDetails->headline;
+            $found = false;
+            while (!$found) {
+                $winner = $members[random_int(0, $memberCount - 1)];
 
-            $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" . $steamApiKey . "&steamids=" . $winner . "&format=xml";
-            $xml = simplexml_load_string(file_get_contents($url));
+                $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=".$steamApiKey."&steamids=".$winner."&format=xml";
+                try {
+                    $xml = simplexml_load_string(file_get_contents($url));
+                } catch (Exception $e) {
+                    $found = false;
+                    continue;
+                }
+
+                if (!$xml->players->player->personaname) {
+                    $found = false;
+                    continue;
+                }
+
+                $found = true;
+            }
 
             return $this->render(
                 'steam_group_member_chooser.html.twig',
                 [
                     'members' => $members,
+                    'winnerId' => $winner,
                     'winner' => $xml->players->player->personaname,
                     'winnerAvatar' => $xml->players->player->avatarfull,
+                    'winnerData' => $xml->players->player,
                     'memberCount' => $memberCount,
                     'groupName' => $groupName,
                     'groupSummary' => $groupSummary,

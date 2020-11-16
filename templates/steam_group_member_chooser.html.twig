@@ -7,14 +7,14 @@
         <div class="card mt-5">
             {% if winner is not defined %}
             <div class="card-header">
-                <h5 class="card-title mb-0">Steam Group Member Chooser</h5>
+                <h5 class="card-title mb-0">Pick a Steam group winner</h5>
             </div>
             <div class="card-body">
                 {{ form_start(form) }}
                 {{ form_label(form.groupName) }}
                 <small>(this is the bit in the URL https://steamcommunity.com/groups/<strong>???</strong>)</small>
                 {{ form_widget(form.groupName) }}
-                <button type="submit" class="btn btn-block btn-outline-success mt-4">Pick a member</button>
+                <button type="submit" class="btn btn-block btn-primary mt-4">Pick a winner</button>
                 {{ form_end(form) }}
             </div>
             {% if error is defined %}
@@ -23,40 +23,53 @@
                 </div>
             {% endif %}
             {% else %}
-            <div class="card-header">
+            <div class="card-header mb-0">
                 <div class="row">
-                    <div class="col-auto"><img src="{{ groupAvatar }}" /></div>
-                    <div class="col"><h4>{{ groupTitle }} &nbsp;&nbsp;&nbsp;<span class="text-secondary font-weight-light">{{ groupHeadline }}</span></h4>
-                        <p>{{ groupSummary }}</p></div>
+                    <div class="col-auto">
+                        <a href="https://steamcommunity.com/groups/{{ groupName }}">
+                            <img src="{{ groupAvatar }}" alt="{{ groupTitle }}" /></a>
+                    </div>
+                    <div class="col"><h4 class="mt-1">{{ groupTitle }} &nbsp;&nbsp;&nbsp;<span
+                                    class="text-secondary font-weight-light">{{ groupHeadline }}</span></h4>
+                        <p class="mb-0">{{ groupSummary }}</p></div>
                 </div>
             </div>
             <div class="card-body">
                 <div class="card w-auto">
-                    <div class="card-body">
-                        The winner is: <strong><img src="{{ winnerAvatar }}" width="50" height="50"
-                                                    class="ml-3 mr-2" /> {{ winner }}</strong>
+                    <div class="card-body bg-light text-dark">
+                        The winner is:
+                        <a href="https://steamcommunity.com/profiles/{{ winnerId }}" class="text-dark">
+                            <img src="{{ winnerAvatar }}" width="50" height="50" class="ml-3 mr-2" alt="{{ winner }}" /></a>
+                        <a href="https://steamcommunity.com/profiles/{{ winnerId }}" class="text-dark">
+                            <strong>{{ winner }}</strong>
+                        </a>
                     </div>
                 </div>
-
             </div>
             <div class="card-footer">
-                There were {{ memberCount }} group members to choose from ({{ unlimitedMemberCount }} unlimited
-                members, {{ onlineMemberCount }} online).
+                <small>
+                    There were {{ memberCount }} group members to choose from ({{ unlimitedMemberCount }} unlimited
+                    members, {{ onlineMemberCount }} online).
+                </small>
             </div>
         </div>
         <div class="card mt-5">
             <div class="card-header">
-                <h5 class="card-title mb-0">Steam Group Member Chooser</h5>
+                <h5 class="card-title mb-0">Pick a Steam group winner</h5>
             </div>
             <div class="card-body">
                 {{ form_start(form) }}
                 {{ form_label(form.groupName) }}
                 <small>(this is the bit in the URL https://steamcommunity.com/groups/<strong>???</strong>)</small>
                 {{ form_widget(form.groupName) }}
-                <button type="submit" class="btn btn-block btn-outline-success mt-4">Pick another</button>
+                <button type="submit" class="btn btn-block btn-primary mt-4">Pick another winner</button>
                 {{ form_end(form) }}
             </div>
             {% endif %}
         </div>
+        <footer class="my-3">
+            <small>Source code for this tool is available from <a
+                        href="https://github.com/stephen-lewis/steam-group-member-chooser">Github</a></small>
+        </footer>
     </div>
 {% endblock %}
